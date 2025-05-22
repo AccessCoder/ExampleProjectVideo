@@ -19,11 +19,12 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)//Cross Site Request Forgery
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/api/example").authenticated()
+                        .requestMatchers("/api/example").hasAuthority("ADMIN")
                         .anyRequest().permitAll())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .exceptionHandling(error -> error
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .logout(logout -> logout.logoutSuccessUrl("http://localhost:5173"))
                 .oauth2Login(o -> o.defaultSuccessUrl("http://localhost:5173"));
         return http.build();
 
